@@ -1,4 +1,12 @@
+"""
+# Proyecto Biblioteca
 
+Proyecto de catálogo de libros
+Este proyecto define una clase Libro para representar libros en un catálogo.
+Cada libro tiene un título, autor, ISBN y disponibilidad.
+Se crean dos instancias de libros y se almacenan en una lista que representa el catálogo.
+Finalmente, se imprime el catálogo de libros.    
+"""
 
 class Libro:
     def __init__(self, titulo, autor, isbn, disponible):
