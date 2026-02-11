@@ -23,6 +23,7 @@ class Libro:
         self.__veces_prestado = 0 # Contador de veces que el libro ha sido prestado, se incrementa cada vez que se presta el libro.
         # El _ indica que es un atributo privado, pero en Python no es estrictamente privado.
         # El __ indica que es un atributo con name mangling, lo que hace que sea más difícil acceder a él desde fuera de la clase, pero aún así es posible.
+        # La pregunta para definir variables privadas es ¿Esta variable interna debería ser modificada directamente por un usuario exterior? Si la respuesta es no, entonces se puede usar un atributo privado con name mangling para indicar que no debería ser modificado directamente desde fuera de la clase.  
 
     def __str__(self):
         return f"{self.titulo} - {self.autor} | ISBN: {self.isbn} | disponible: {self.disponible}" # Se debe usar return porque __str__ debe devolver una cadena de texto. Se usa f-string para formatear la salida.
