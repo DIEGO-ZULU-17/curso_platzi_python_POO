@@ -5,6 +5,15 @@ El uso de super en el constructor (init) llama al init de la clase padre
 sin nombrarla directamente, evitando confusiones y acoplamientos innecesarios.
 """
 
+from typing import Protocol # Protocol ayuda en que el código sea más flexible y menos acoplado, ya que permite definir una interfaz que las clases pueden implementar sin necesidad de heredar de una clase base específica. Esto es especialmente útil en casos donde se desea que diferentes clases compartan un comportamiento común sin tener que estar relacionadas jerárquicamente a través de la herencia tradicional. Al usar Protocol, se puede definir un conjunto de métodos que una clase debe implementar para ser considerada compatible con esa interfaz, lo que facilita la reutilización de código y la integración de diferentes clases sin necesidad de una relación de herencia directa.
+
+class SolicitanteProtocol(Protocol): # Definimos un protocolo para la interfaz de solicitante, lo que permite que cualquier clase que implemente este protocolo pueda ser utilizada como solicitante en el sistema de préstamos de libros, sin necesidad de heredar de una clase base específica.
+
+    def solicitar_libro(self, titulo: str) -> str: # Typing indica que el método solicitar_libro debe recibir un argumento de tipo str (el título del libro) y retornar un valor de tipo str (el resultado de la solicitud de préstamo). Esto ayuda a mejorar la legibilidad del código y a detectar errores de tipo durante el desarrollo, ya que proporciona información clara sobre los tipos de datos esperados para los argumentos y el valor de retorno del método solicitar_libro.
+
+        """Retorna el resultado de la solicitud de préstamo."""
+        ...
+
 class Usuario:
     def __init__(self, nombre, cedula):
         self.nombre = nombre
@@ -67,35 +76,123 @@ class Profesor(Usuario): # Al agregar la clase Profesor como hija de Usuario, se
 estudiante = Estudiante("Luis", "123456", "Ingeniería") # Las variables empiezan con minúscula por convención, y en mayúscula para las clases, así podemos crear instancias de las clases.
 profesor = Profesor("Ana", "987654")
 
-# Pruebas de préstamo
-print("=== PRUEBAS DE PRÉSTAMO ===")
-print("\n")
+estudiante_1 = Estudiante("Jose", "654321", "Salud")
 
-print(estudiante.solicitar_libro("Python básico"))
-print(estudiante.solicitar_libro("Python intermedio"))
-print(estudiante.solicitar_libro("Python avanzado"))
-print(estudiante.solicitar_libro("Python Django"))  # Debe indicar límite alcanzado: 3
+usuarios = [estudiante, profesor, estudiante_1] # Se crea una lista de usuarios para almacenar las instancias de Estudiante y Profesor, lo que permite gestionar y acceder a los usuarios de manera organizada en el sistema. Esta lista puede ser utilizada para realizar operaciones como solicitar libros, devolver libros, o mostrar información de los usuarios.
 
-print("\n") # Salto de línea para separar las pruebas de estudiante y profesor
+for usuario in usuarios: # Se itera sobre la lista de usuarios para realizar operaciones específicas según el tipo de usuario. Esto permite aplicar lógica diferente para estudiantes y profesores, como el límite de libros prestados para los estudiantes y la capacidad ilimitada para los profesores. La iteración sobre la lista de usuarios facilita la gestión y manipulación de los objetos en el sistema.
+    print(usuario.solicitar_libro("Título de ejemplo")) # Se llama al método solicitar_libro para cada usuario en la lista, lo que permite verificar que el comportamiento de solicitud de libros se implementa correctamente tanto para estudiantes como para profesores, y que se respetan las restricciones de préstamo según el tipo de usuario.
 
-print(profesor.solicitar_libro("Python básico"))
-print(profesor.solicitar_libro("Python intermedio"))
-print(profesor.solicitar_libro("Python avanzado"))
-print(profesor.solicitar_libro("Python Django"))    # Todos autorizados
+# Lista tipada: solo admite elementos que cumplan SolicitanteProtocol
+#usuarios: list[SolicitanteProtocol] = []
 
-# Pruebas de devolución de libros
-print("\n=== PRUEBAS DE DEVOLUCIÓN ===")
-print(f"Libros prestados del estudiante antes: {estudiante.libros_prestados}")
-print(estudiante.devolver_libro("Python básico"))  # Debe devolver exitosamente
-print(f"Libros prestados del estudiante después: {estudiante.libros_prestados}")
+#usuarios.append(Libro("Título de prueba", "Autor de prueba", "ISBN"))  # error en el editor: no implementa solicitar_libro    
 
-print("\nIntentando devolver un libro que no tiene...")
-print(estudiante.devolver_libro("Python Django"))  # Debe indicar que no tiene este libro
+class Estudiante:
+    def solicitar_libro(self, titulo: str) -> str: # 
+        return f"\n Préstamo autorizado para estudiante: {titulo}" # El método solicitar_libro en la clase Estudiante implementa la lógica específica para autorizar el préstamo de un libro a un estudiante, lo que permite diferenciar el comportamiento de solicitud de libros entre estudiantes y profesores en el sistema de préstamos de libros. Al implementar este método, se puede gestionar adecuadamente las solicitudes de préstamo según el tipo de usuario, asegurando que se respeten las restricciones y políticas establecidas para cada categoría de usuario.
 
-print("\n")
-print(f"Libros prestados del profesor antes: {profesor.libros_prestados}")
-print(profesor.devolver_libro("Python intermedio"))  # Debe devolver exitosamente
-print(f"Libros prestados del profesor después: {profesor.libros_prestados}")
+class Profesor:
+    def solicitar_libro(self, titulo: str) -> str:
+        return f"\n Préstamo autorizado para profesor: {titulo}"
 
-print("\nIntentando devolver un libro que no tiene...")
-print(profesor.devolver_libro("Harry Potter"))  # Debe indicar que no tiene este libro
+usuarios: list[SolicitanteProtocol] = [Estudiante(), Profesor()] # Se crea una lista de usuarios que implementan el protocolo SolicitanteProtocol, lo que permite almacenar tanto estudiantes como profesores en la misma lista y gestionar sus solicitudes de préstamo de manera uniforme a través del método solicitar_libro definido en el protocolo. Esto facilita la integración de diferentes tipos de usuarios en el sistema sin necesidad de una relación de herencia directa, promoviendo un diseño más flexible y desacoplado.
+
+for usuario in usuarios:
+    print(usuario.solicitar_libro("Título de prueba")) # Al iterar sobre la lista de usuarios que implementan el protocolo SolicitanteProtocol, se llama al método solicitar_libro para cada usuario, lo que permite verificar que el comportamiento de solicitud de libros se implementa correctamente tanto para estudiantes como para profesores, y que se respetan las restricciones de préstamo según el tipo de usuario. Esto demuestra la flexibilidad del diseño basado en protocolos, ya que se puede gestionar diferentes tipos de usuarios sin necesidad de una relación de herencia directa.
+
+
+# ============================================================================
+# PROTOCOL PARA LIBROS - Polimorfismo basado en contratos claros
+# ============================================================================
+# Un Protocol define un contrato que cualquier clase puede implementar
+# sin necesidad de herencia. De esta forma, LibroFisico y LibroElectronico
+# son independientes pero cumplen el mismo contrato (LibroProtocol).
+
+class LibroProtocol(Protocol):
+    """Define el contrato que deben cumplir todos los tipos de libros."""
+    
+    def prestar(self) -> str:
+        """Retorna un mensaje de autorización de préstamo específico del tipo."""
+        ...
+    
+    def calcular_duracion(self) -> str:
+        """Retorna la duración del préstamo según el tipo de libro."""
+        ...
+
+
+class LibroFisico:
+    """Implementación de un libro físico con su propia lógica de préstamo.
+    
+    Los libros físicos tienen una duración estándar de 14 días y requieren devolución física. No hereda de ninguna clase base, pero implementa el contrato LibroProtocol.
+    """
+    
+    def __init__(self, titulo: str, autor: str):
+        self.titulo = titulo
+        self.autor = autor
+    
+    def prestar(self) -> str:
+        """Lógica de préstamo para libros físicos: se registra en el sistema."""
+        return f"Libro físico '{self.titulo}' de {self.autor} prestado. Por favor, cuídalo bien."
+    
+    def calcular_duracion(self) -> str:
+        """Los libros físicos se prestan por 14 días."""
+        return f"Duración del préstamo: 14 días (debe ser devuelto en perfectas condiciones)."
+
+
+class LibroElectronico:
+    """Implementación de un libro electrónico con su propia lógica de préstamo.
+    
+    Los libros electrónicos operan diferente: no se pierden, pueden ser copiados, y tienen acceso digital. No hereda de ninguna clase base, pero implementa el contrato LibroProtocol.
+    """
+    
+    def __init__(self, titulo: str, autor: str, formato: str):
+        self.titulo = titulo
+        self.autor = autor
+        self.formato = formato  # PDF, EPUB, MOBI, etc.
+    
+    def prestar(self) -> str:
+        """Lógica de préstamo para libros electrónicos: acceso digital inmediato."""
+        return f"Libro electrónico '{self.titulo}' de {self.autor} ({self.formato}) - Acceso digital autorizado instantáneamente."
+    
+    def calcular_duracion(self) -> str:
+        """Los libros electrónicos se prestan por 30 días."""
+        return f"Duración del acceso: 30 días (acceso digital ilimitado durante este período)."
+
+
+# ============================================================================
+# DEMOSTRACIÓN DE POLIMORFISMO CON LISTA TIPADA
+# ============================================================================
+# A pesar de que LibroFisico y LibroElectronico son clases independientes,
+# pueden convivir en la misma lista tipada gracias al Protocol.
+# El método prestar() y calcular_duracion() se comportan distintamente
+# según el tipo concreto, demostrando polimorfismo en acción.
+
+print("\n" + "="*70)
+print("SISTEMA DE GESTIÓN DE BIBLIOTECA CON PROTOCOLS")
+print("="*70)
+
+# Crear instancias de diferentes tipos de libros
+libro_fisico_1 = LibroFisico("Cien años de soledad", "Gabriel García Márquez")
+libro_fisico_2 = LibroFisico("Don Quijote", "Miguel de Cervantes")
+libro_electronico_1 = LibroElectronico("Clean Code", "Robert C. Martin", "PDF")
+libro_electronico_2 = LibroElectronico("Python Avanzado", "Guido van Rossum", "EPUB")
+
+# Lista tipada que acepta cualquier objeto que implemente LibroProtocol
+biblioteca: list[LibroProtocol] = [
+    libro_fisico_1,
+    libro_fisico_2,
+    libro_electronico_1,
+    libro_electronico_2
+]
+
+# Iterar sobre la biblioteca: mismo interface, comportamientos distintos
+print("\n📖 Procesando solicitudes de préstamo en la biblioteca:\n")
+for libro in biblioteca:
+    print(f"{libro.prestar()}")
+    print(f"  {libro.calcular_duracion()}\n")
+
+print("="*70)
+print("✅ Polimorfismo en acción: LibroFisico y LibroElectronico implementan")
+print("   el mismo Protocol (LibroProtocol) pero con lógicas diferentes.")
+print("="*70)
