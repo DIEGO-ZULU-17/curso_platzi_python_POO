@@ -1,4 +1,5 @@
 from typing import Protocol
+from exceptions import LibroNoDisponibleError
 
 
 class LibroProtocol(Protocol):
@@ -31,7 +32,7 @@ class Libro:
             self.disponible = False
             self.__veces_prestado += 1
             return f"'{self.titulo}' prestado exitosamente. Total préstamos: {self.__veces_prestado}"
-        return f"'{self.titulo}' no está disponible"
+        raise LibroNoDisponibleError(self.titulo)
 
     def devolver(self):
         self.disponible = True

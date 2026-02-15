@@ -11,6 +11,7 @@ Finalmente, se imprime el catálogo de libros.
 from biblioteca import Biblioteca
 from libros import LibroFisico
 from usuarios import Estudiante, Profesor, SolicitanteProtocol
+from exceptions import BibliotecaError, LibroNoDisponibleError
 
 biblioteca = Biblioteca("Platzi Biblioteca")
 
@@ -30,7 +31,7 @@ mi_libro_no_disponible = LibroFisico(
     "No disponible",
     "Luis",
     "56789",
-    True,
+    False,
 )
 otro_libro = LibroFisico(
     "El Principito",
@@ -44,3 +45,20 @@ biblioteca.libros = [mi_libro, mi_libro_no_disponible, otro_libro]
 
 
 print(biblioteca.libros)
+
+try:
+    print(estudiante.solicitar_libro(None))
+except BibliotecaError as e:
+    print("Error: no se pudo solicitar el libro.")
+    print(f"{e}, tipo: {type(e)}")
+
+resultado = estudiante.solicitar_libro("El principito")
+print(resultado)
+
+
+try:
+    resultado = mi_libro_no_disponible.prestar()
+    print(resultado)
+except LibroNoDisponibleError as e:
+    print(e)  # imprimirá: El libro 'No disponible' no está disponible para préstamo.
+
