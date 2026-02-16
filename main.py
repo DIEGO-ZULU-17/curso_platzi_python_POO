@@ -4,61 +4,56 @@
 Proyecto de catálogo de libros
 Este proyecto define una clase Libro para representar libros en un catálogo.
 Cada libro tiene un título, autor, ISBN y disponibilidad.
-Se crean dos instancias de libros y se almacenan en una lista que representa el catálogo.
-Finalmente, se imprime el catálogo de libros.    
+Se crean instancias de libros y se almacenan en una lista que representa el catálogo.
 """
 
 from biblioteca import Biblioteca
-from libros import LibroFisico
-from usuarios import Estudiante, Profesor, SolicitanteProtocol
-from exceptions import BibliotecaError, LibroNoDisponibleError
+from usuarios import Estudiante
+from exceptions import UsuarioNoEncontrado
+from datos_ejemplo import obtener_libros_ejemplo, obtener_usuarios_ejemplo
 
-biblioteca = Biblioteca("Platzi Biblioteca")
+biblioteca = Biblioteca("Biblioteca Perfecta")
 
-estudiante = Estudiante("Luis", "1123123123", "Sistemas")
-estudiante_1 = Estudiante("Jose", "56789", "Salud")
-profesor = Profesor("Felipe", "123123123")
-usuarios: list[SolicitanteProtocol] = [estudiante, estudiante_1, profesor]
+# Cargar usuarios y libros de ejemplo
+biblioteca.usuarios = obtener_usuarios_ejemplo()
+biblioteca.libros = obtener_libros_ejemplo()
 
+# Imprimir el catálogo de libros disponibles
+print("\n")
+print("Bienvenido a Biblioteca Perfecta.")
+print("\n")
+print("Libros disponibles:")
+for titulo in biblioteca.libros_disponibles():
+    print(f"  - {titulo}")
+print()
 
-mi_libro = LibroFisico(
-    "100 Años de Soledad",
-    "Gabriel Garcia Marquez",
-    "9781644734728",
-    True,
-)
-mi_libro_no_disponible = LibroFisico(
-    "No disponible",
-    "Luis",
-    "56789",
-    False,
-)
-otro_libro = LibroFisico(
-    "El Principito",
-    "Saint-Exupéry",
-    "9781644731234728",
-    True,
-)
-
-
-biblioteca.libros = [mi_libro, mi_libro_no_disponible, otro_libro]
-
-
-print(biblioteca.libros)
+# Buscar un usuario por cédula
+cedula = input("Digite el número de cédula: ")
 
 try:
-    print(estudiante.solicitar_libro(None))
-except BibliotecaError as e:
-    print("Error: no se pudo solicitar el libro.")
-    print(f"{e}, tipo: {type(e)}")
-
-resultado = estudiante.solicitar_libro("El principito")
-print(resultado)
-
-
-try:
-    resultado = mi_libro_no_disponible.prestar()
-    print(resultado)
-except LibroNoDisponibleError as e:
-    print(e)  # imprimirá: El libro 'No disponible' no está disponible para préstamo.
-
+    usuario = biblioteca.buscar_usuario(cedula)
+    print(f"\nCédula: {usuario.cedula}, Nombre: {usuario.nombre}")
+    
+    # Permitir que el usuario solicite un libro
+    print("\nLibros disponibles para prestar:")
+    for libro in biblioteca.libros:
+        if libro.disponible:
+            print(f"  - {libro.titulo}")
+    
+    titulo_libro = input("\n¿Qué libro deseas pedir prestado? ")
+    
+    # Buscar el libro y hacer el préstamo
+    for libro in biblioteca.libros:
+        if libro.titulo.lower() == titulo_libro.lower() and libro.disponible:
+            resultado = usuario.solicitar_libro(libro.titulo)
+            print("\n") 
+            print(resultado)
+            print("\n") 
+            print(libro.prestar())
+            break
+    else:
+        print("\n")
+        print(f"El libro '{titulo_libro}' no está disponible.")
+        
+except UsuarioNoEncontrado:
+    print(f"El usuario con cédula {cedula} que estás buscando no existe.")

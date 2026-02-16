@@ -13,3 +13,7 @@ class LibroNoDisponibleError(BibliotecaError):
         else:
             mensaje = "El libro no está disponible para préstamo."
         super().__init__(mensaje)
+
+class UsuarioNoEncontrado(Exception):
+    """El usuario no fue encontrado en el sistema"""
+    pass
