@@ -1,19 +1,30 @@
 """En este archivo se definen las excepciones personalizadas para la biblioteca."""
 
 class BibliotecaError(Exception):
+    """Excepción base para errores de la biblioteca"""
+
     pass
+
+
+class LimitePrestamosError(BibliotecaError):
+    """Se excedió el límite de préstamos permitidos"""
+
+    pass
+
 
 class TituloInvalidoError(BibliotecaError):
+    """El título del libro no es válido"""
+
     pass
 
-class LibroNoDisponibleError(BibliotecaError):
-    def __init__(self, titulo: str | None = None):
-        if titulo:
-            mensaje = f"El libro '{titulo}' no está disponible para préstamo."
-        else:
-            mensaje = "El libro no está disponible para préstamo."
-        super().__init__(mensaje)
 
-class UsuarioNoEncontrado(Exception):
+class LibroNoDisponibleError(BibliotecaError):
+    """El libro no está disponible para préstamo"""
+
+    pass
+
+
+class UsuarioNoEncontradoError(BibliotecaError):
     """El usuario no fue encontrado en el sistema"""
+
     pass

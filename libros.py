@@ -1,4 +1,5 @@
 from typing import Protocol
+
 from exceptions import LibroNoDisponibleError
 
 
@@ -28,11 +29,13 @@ class Libro:
         return f"{self.titulo} por {self.autor} disponible: {self.disponible}"
 
     def prestar(self):
+        if not self.disponible: # not self.disponible significa que si el libro no está disponible (es decir, si self.disponible es False), entonces se ejecutará el bloque de código dentro del if. En este caso, se lanzará una excepción LibroNoDisponibleError con un mensaje que indica que el libro no está disponible para préstamo.
+            raise LibroNoDisponibleError(f"'{self.titulo}' no está disponible")
+
         if self.disponible:
             self.disponible = False
             self.__veces_prestado += 1
             return f"'{self.titulo}' prestado exitosamente. Total préstamos: {self.__veces_prestado}"
-        raise LibroNoDisponibleError(self.titulo)
 
     def devolver(self):
         self.disponible = True
