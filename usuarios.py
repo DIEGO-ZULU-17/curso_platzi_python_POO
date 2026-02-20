@@ -7,17 +7,28 @@ sin nombrarla directamente, evitando confusiones y acoplamientos innecesarios.
 
 
 from typing import Protocol
-
+from abc import ABC, abstractmethod
 from exceptions import TituloInvalidoError
 
 
-class SolicitanteProtocol(Protocol):
+class SolicitanteProtocol(Protocol): # Protocol es una clase de la biblioteca typing que se utiliza para definir interfaces o contratos que las clases pueden implementar. En este caso, SolicitanteProtocol define un método solicitar_libro que cualquier clase que implemente este protocolo debe proporcionar. Esto permite una mayor flexibilidad y desacoplamiento en el diseño del código, ya que cualquier clase que implemente el método solicitar_libro puede ser utilizada como un solicitante de libros sin necesidad de heredar de una clase base específica.
+
     def solicitar_libro(self, titulo: str) -> str:
         """Metodo que debe implementar cualquier solicitante"""
         ...
 
+class UsuarioBase(ABC): # ABC sirve para marcar esta clase como abstracta, lo que significa que no se puede instanciar directamente. Esto es útil para definir una estructura común para las clases hijas (Estudiante y Profesor) sin permitir la creación de objetos de la clase UsuarioBase.
 
-class Usuario:
+    @abstractmethod # El decorador @abstractmethod se utiliza para marcar el método solicitar_libro como un método abstracto, lo que significa que las clases hijas (Estudiante y Profesor) deben proporcionar una implementación concreta de este método. Esto garantiza que cualquier clase que herede de UsuarioBase implementará el método solicitar_libro, lo que es esencial para el funcionamiento del sistema de préstamos de libros en la biblioteca.
+
+    def solicitar_libro(self):
+        pass
+
+    @abstractmethod
+    def metodo_prueba(self): # Sale el error "TypeError: Can't instantiate abstract class Estudiante without an implementation for abstract method 'metodo_prueba'" porque la clase Estudiante hereda de UsuarioBase, que tiene un método abstracto llamado metodo_prueba. Al no proporcionar una implementación concreta para este método en la clase Estudiante, se considera que Estudiante es una clase abstracta y no se puede instanciar directamente. Para solucionar este error, se debe implementar el método metodo_prueba en la clase Estudiante, proporcionando una funcionalidad específica para ese método. Se corrige agregando (self) como parámetro y una implementación concreta dentro del método.
+        pass
+
+class Usuario(UsuarioBase):
     def __init__(self, nombre, cedula):
         self.nombre = nombre
         self.cedula = cedula
@@ -25,6 +36,9 @@ class Usuario:
 
     def solicitar_libro(self, titulo):
         return f"Solicitud de libro '{titulo}' realizada"
+
+    def metodo_prueba(self):
+        return "Implementación del método de prueba en Usuario" # Aquí se soluciona el TypeError porque se proporciona una implementación concreta para el método metodo_prueba, lo que permite que la clase Usuario ya no sea abstracta y pueda ser instanciada sin problemas.
 
 
 class Estudiante(Usuario):
