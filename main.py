@@ -28,12 +28,18 @@ profesor = Profesor("Felipe", "123123123")
 biblioteca.usuarios = [profesor] + data_estudiantes
 biblioteca.libros = data_libros
 
+"""
+# EJEMPLO DE SETTER CON VALIDACIÓN
+libro_de_prueba = data_libros[0]
+libro_de_prueba.veces_prestado = -1 # Si es negativo, se lanzará una excepción ValueError indicando que el número de veces prestado debe ser mayor que cero. Esto se debe a la lógica implementada en el setter de la propiedad veces_prestado, que verifica si el valor asignado es mayor que cero antes de actualizar el contador de veces prestado. Si se intenta asignar un valor negativo, se lanza la excepción para evitar que el contador tenga un valor no válido.
+"""
 
 print("Bienvenido a Platzi Biblioteca")
 
 print("Libros disponibles:")
-for titulo in biblioteca.libros_disponibles():
-    print(f"  - {titulo}")
+for libro in biblioteca.libros_disponibles():
+    print(f"  - {libro.descripcion_completa}, Veces prestado: {libro.veces_prestado}") # veces_prestado funciona como un atributo de solo lectura aunque es un método, lo que significa que se puede acceder a su valor pero no se puede modificar directamente. Esto es útil para mantener la integridad de los datos y evitar cambios no deseados en el número de veces que un libro ha sido prestado.
+    # No es necesario agregar los parentesis al acceder a veces_prestado porque se ha definido como una propiedad utilizando el decorador @property en la clase Libro. Esto permite acceder a veces_prestado como si fuera un atributo, sin necesidad de llamarlo como una función. Por lo tanto, se puede usar libro.veces_prestado en lugar de libro.veces_prestado() para obtener el valor del número de veces que el libro ha sido prestado.
 print()
 
 # Solicitar un libro

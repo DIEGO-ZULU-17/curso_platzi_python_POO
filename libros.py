@@ -53,14 +53,24 @@ class Libro(LibroBase):
         self.disponible = True
         return f"'{self.titulo}' devuelto y disponible nuevamente"
 
+    @property
     def es_popular(self) -> bool:
         return self.__veces_prestado > 5
 
-    def get_veces_prestado(self) -> int:
+    @property # @property se utiliza para definir un método como una propiedad, lo que permite acceder a su valor como si fuera un atributo, sin necesidad de llamarlo como una función. Esto es útil para proporcionar una interfaz más limpia y fácil de usar, especialmente cuando el valor se calcula dinámicamente o se basa en otros atributos.
+    def veces_prestado(self) -> int:
         return self.__veces_prestado
 
-    def set_veces_prestado(self, veces_prestado: int) -> None:
-        self.__veces_prestado = veces_prestado
+    @veces_prestado.setter # @veces_prestado.setter se utiliza para definir un método como un setter para una propiedad previamente definida con @property. Esto permite asignar un valor a la propiedad, lo que a su vez llama al método setter para realizar cualquier lógica adicional necesaria al establecer el valor.
+    def veces_prestado(self, veces_prestado):
+        if veces_prestado > 0:
+            self.__veces_prestado = veces_prestado
+        else:
+            raise ValueError("El número de veces prestado debe ser mayor que cero")
+
+    @property
+    def descripcion_completa(self) -> str:
+        return f"{self.titulo} por {self.autor}, ISBN: {self.isbn}"
 
 
 class LibroFisico(Libro):
