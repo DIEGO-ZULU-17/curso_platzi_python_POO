@@ -39,6 +39,31 @@ class Usuario(UsuarioBase):
 
     def metodo_prueba(self):
         return "Implementación del método de prueba en Usuario" # Aquí se soluciona el TypeError porque se proporciona una implementación concreta para el método metodo_prueba, lo que permite que la clase Usuario ya no sea abstracta y pueda ser instanciada sin problemas.
+    
+    # Validación de nombre y cédula utilizando propiedades y setters para garantizar que los datos sean correctos y evitar errores en el sistema. Esto mejora la robustez del código al asegurarse de que los atributos nombre y cedula siempre tengan valores válidos, lo que es crucial para la gestión de usuarios en la biblioteca.
+    @property
+    def nombre(self):
+        return self._nombre
+
+    @nombre.setter
+    def nombre(self, value):
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("El nombre debe ser una cadena no vacía.")
+        self._nombre = value.strip()
+
+    @property
+    def cedula(self):
+        return self._cedula
+
+    @cedula.setter
+    def cedula(self, value):
+        if not isinstance(value, str) or not value.isdigit():
+            raise ValueError("La cédula debe ser una cadena de dígitos.")
+        self._cedula = value
+
+    @property
+    def nombre_completo(self):
+        return f"{self.nombre} ({self.cedula})"
 
 
 class Estudiante(Usuario):

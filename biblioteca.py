@@ -7,9 +7,6 @@ class Biblioteca:
         self.libros = []
         self.usuarios = []
 
-    def libros_disponibles(self):
-        return [libro for libro in self.libros if libro.disponible]
-
     def buscar_usuario(self, cedula):
         for usuario in self.usuarios:
             if usuario.cedula == cedula:
@@ -26,3 +23,26 @@ class Biblioteca:
         raise LibroNoDisponibleError(
             f"El libro: {titulo}, no está disponible o no existe."
         )
+
+    @property
+    def libros(self):
+        return self._libros
+
+    @libros.setter
+    def libros(self, value):
+        if not isinstance(value, list):
+            raise TypeError("libros debe ser una lista de instancias de Libro.")
+        # validación opcional por elemento (import dentro para evitar ciclos)
+        try:
+            from libros import Libro
+            for item in value:
+                if not isinstance(item, Libro):
+                    raise TypeError("Todos los elementos de libros deben ser instancias de Libro.")
+        except ImportError:
+            # Si no existe el módulo libros, solo validar tipo de lista
+            pass
+        self._libros = value
+
+    @property
+    def libros_disponibles(self):
+        return [libro for libro in self.libros if libro.disponible]  

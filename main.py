@@ -37,7 +37,7 @@ libro_de_prueba.veces_prestado = -1 # Si es negativo, se lanzará una excepción
 print("Bienvenido a Platzi Biblioteca")
 
 print("Libros disponibles:")
-for libro in biblioteca.libros_disponibles():
+for libro in biblioteca.libros_disponibles:
     print(f"  - {libro.descripcion_completa}, Veces prestado: {libro.veces_prestado}") # veces_prestado funciona como un atributo de solo lectura aunque es un método, lo que significa que se puede acceder a su valor pero no se puede modificar directamente. Esto es útil para mantener la integridad de los datos y evitar cambios no deseados en el número de veces que un libro ha sido prestado.
     # No es necesario agregar los parentesis al acceder a veces_prestado porque se ha definido como una propiedad utilizando el decorador @property en la clase Libro. Esto permite acceder a veces_prestado como si fuera un atributo, sin necesidad de llamarlo como una función. Por lo tanto, se puede usar libro.veces_prestado en lugar de libro.veces_prestado() para obtener el valor del número de veces que el libro ha sido prestado.
 print()
@@ -47,7 +47,7 @@ print()
 cedula = input("Digite el numero cedula: ")
 try:
     usuario = biblioteca.buscar_usuario(cedula)
-    print(usuario.cedula, usuario.nombre)
+    print(usuario.nombre_completo)
 except UsuarioNoEncontradoError as e:
     print(e)
 
