@@ -21,6 +21,8 @@ from biblioteca import Biblioteca
 from data import data_estudiantes, data_libros
 from exceptions import LibroNoDisponibleError, UsuarioNoEncontradoError
 from usuarios import Profesor
+from libros import Libro
+from usuarios import Estudiante
 
 biblioteca = Biblioteca("Biblioteca Perfecta")
 profesor = Profesor("Felipe", "123123123")
@@ -28,13 +30,42 @@ profesor = Profesor("Felipe", "123123123")
 biblioteca.usuarios = [profesor] + data_estudiantes
 biblioteca.libros = data_libros
 
-"""
-# EJEMPLO DE SETTER CON VALIDACIÓN
-libro_de_prueba = data_libros[0]
-libro_de_prueba.veces_prestado = -1 # Si es negativo, se lanzará una excepción ValueError indicando que el número de veces prestado debe ser mayor que cero. Esto se debe a la lógica implementada en el setter de la propiedad veces_prestado, que verifica si el valor asignado es mayor que cero antes de actualizar el contador de veces prestado. Si se intenta asignar un valor negativo, se lanza la excepción para evitar que el contador tenga un valor no válido.
-"""
 
-print("Bienvenido a Platzi Biblioteca")
+""" # EJEMPLO DE SETTER CON VALIDACIÓN
+libro_de_prueba = data_libros[0]
+libro_de_prueba.veces_prestado = -1 # Si es negativo, se lanzará una excepción ValueError indicando que el número de veces prestado debe ser mayor que cero. Esto se debe a la lógica implementada en el setter de la propiedad veces_prestado, que verifica si el valor asignado es mayor que cero antes de actualizar el contador de veces prestado. Si se intenta asignar un valor negativo, se lanza la excepción para evitar que el contador tenga un valor no válido. """
+
+libro_no_disp = Libro.crear_no_disponible(
+    titulo="Libro de prueba",
+    autor="Autor de prueba",
+    isbn="1234567890",
+)
+print("Libro disponible:", libro_no_disp.disponible)  # False
+# Esto funciona porque crear_no_disponible es un método de clase, lo que significa que se puede llamar directamente desde la clase Libro sin necesidad de crear una instancia de la clase. En este caso, se está llamando al método crear_no_disponible pasando el título, autor e ISBN del libro como argumentos para crear una nueva instancia de Libro que no esté disponible. El resultado de esta operación se almacena en la variable libro_no_disp. Luego, se imprime el estado de disponibilidad del libro utilizando el atributo disponible, que en este caso será False, indicando que el libro no está disponible para préstamo.
+
+
+# EJEMPLO DE USO DE MÉTODOS DE CLASE Y ESTÁTICOS EN LA CLASE Estudiante
+# Usando el método de clase crear_estudiante
+estudiante1 = Estudiante.crear_estudiante("Juan Pérez", "12345678", "Ingeniería")
+print(f"Estudiante creado: {estudiante1.nombre_completo}, Carrera: {estudiante1.carrera}")
+
+# Usando el factory method específico
+estudiante2 = Estudiante.estudiante_ingeneria("María García", "87654321")
+print(f"Estudiante creado: {estudiante2.nombre_completo}, Carrera: {estudiante2.carrera}")
+
+# Usando el método estático directamente
+es_valida = Estudiante.validar_carrera("Medicina")
+print(f"¿Medicina es válida? {es_valida}")  # True
+
+# Intentando crear con carrera inválida (lanza ValueError)
+try:
+    estudiante3 = Estudiante.crear_estudiante("Pedro", "11111111", "Filosofía")
+except ValueError as e:
+    print(f"Error: {e}")
+
+
+
+print("\n Bienvenido a Platzi Biblioteca")
 
 print("Libros disponibles:")
 for libro in biblioteca.libros_disponibles:
@@ -70,3 +101,11 @@ try:
     print(f"\n{resultado_prestar}")
 except LibroNoDisponibleError as e:
     print(e) # e significa que se está capturando la excepción LibroNoDisponibleError y se imprime el mensaje de error asociado a esa excepción. Esto permite manejar el caso en el que el libro no está disponible para préstamo de manera controlada, mostrando un mensaje informativo al usuario en lugar de que el programa falle abruptamente.
+
+""" resultado = Biblioteca.validar_isbn("12345") 
+print("El ISBN es válido:", resultado)  # False
+# Esto funciona porque validar_isbn es un método estático, lo que significa que se puede llamar directamente desde la clase Biblioteca sin necesidad de crear una instancia de la clase. En este caso, se está llamando al método validar_isbn pasando el string "12345" como argumento para verificar si es un ISBN válido. El resultado de esta validación se almacena en la variable resultado. Luego, se imprime el resultado indicando si el ISBN es válido o no. En este caso, dado que "12345" tiene menos de 10 caracteres, el resultado será False, indicando que el ISBN no es válido.
+
+resultado = Biblioteca.validar_isbn("1234567890")
+print("El ISBN es válido:", resultado)  # True """
+

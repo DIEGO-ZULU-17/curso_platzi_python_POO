@@ -67,6 +67,10 @@ class Usuario(UsuarioBase):
 
 
 class Estudiante(Usuario):
+
+        # Carreras válidas como atributo de clase
+    CARRERAS_VALIDAS = ["Ingeniería", "Medicina", "Derecho", "Arquitectura", "Psicología"]
+    
     def __init__(self, nombre, cedula, carrera):
         super().__init__(nombre, cedula)
         self.carrera = carrera
@@ -83,6 +87,50 @@ class Estudiante(Usuario):
             return (
                 f"No puedes prestar más libros, Limite alcanzado: {self.limite_libros}"
             )
+
+    @staticmethod
+    def validar_carrera(carrera: str) -> bool:
+        """
+        Método estático para validar si una carrera es válida.
+        No necesita acceso a la instancia ni a la clase.
+        """
+        return carrera in Estudiante.CARRERAS_VALIDAS
+
+    @classmethod
+    def crear_estudiante(cls, nombre: str, cedula: str, carrera: str) -> "Estudiante":
+        """
+        Método de clase para crear un estudiante en una carrera específica.
+        Valida la carrera antes de crear la instancia.
+        
+        Args:
+            nombre: Nombre del estudiante
+            cedula: Número de cédula
+            carrera: Carrera a estudiar
+            
+        Returns:
+            Estudiante: Nueva instancia de Estudiante
+            
+        Raises:
+            ValueError: Si la carrera no es válida
+        """
+        if not cls.validar_carrera(carrera):
+            raise ValueError(f"La carrera '{carrera}' no es válida. Carreras válidas: {cls.CARRERAS_VALIDAS}")
+        
+        return cls(nombre, cedula, carrera)
+    
+    @classmethod
+    def estudiante_ingeneria(cls, nombre: str, cedula: str) -> "Estudiante":
+        """
+        Factory method para crear estudiantes de Ingeniería.
+        """
+        return cls(nombre, cedula, "Ingeniería")
+    
+    @classmethod
+    def estudiante_medicina(cls, nombre: str, cedula: str) -> "Estudiante":
+        """
+        Factory method para crear estudiantes de Medicina.
+        """
+        return cls(nombre, cedula, "Medicina")
 
 
 class Profesor(Usuario):

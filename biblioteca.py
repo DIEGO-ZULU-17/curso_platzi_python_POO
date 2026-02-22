@@ -46,3 +46,7 @@ class Biblioteca:
     @property
     def libros_disponibles(self):
         return [libro for libro in self.libros if libro.disponible]  
+
+    @staticmethod # @staticmethod es un decorador que se utiliza para definir un método estático dentro de una clase. Un método estático es un método que pertenece a la clase en sí, en lugar de a una instancia específica de la clase. Esto significa que el método puede ser llamado sin necesidad de crear una instancia de la clase. En el caso de validar_isbn, al ser un método estático, se puede llamar directamente desde la clase Biblioteca sin necesidad de instanciarla, lo que es útil para realizar validaciones relacionadas con los libros sin depender del estado de una instancia específica de la biblioteca. 
+    def validar_isbn(isbn: str) -> bool:
+        return len(isbn) >= 10
