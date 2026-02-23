@@ -2,8 +2,8 @@ from exceptions import LibroNoDisponibleError, UsuarioNoEncontradoError
 
 
 class Biblioteca:
-    def __init__(self, name) -> None:
-        self.name = name
+    def __init__(self, nombre) -> None:
+        self.nombre = nombre
         self.libros = []
         self.usuarios = []
 

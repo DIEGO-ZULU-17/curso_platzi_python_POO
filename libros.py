@@ -75,7 +75,9 @@ class Libro(LibroBase):
     def calcular_duracion(self) -> str:
         return "7 días"
 
-    @classmethod # @classmethod es un decorador que se utiliza para definir un método de clase dentro de una clase. Un método de clase es un método que pertenece a la clase en sí, en lugar de a una instancia específica de la clase. Esto significa que el método puede ser llamado sin necesidad de crear una instancia de la clase. En el caso de crear_no_disponible, al ser un método de clase, se puede llamar directamente desde la clase Libro sin necesidad de instanciarla, lo que es útil para crear libros que no estén disponibles sin depender del estado de una instancia específica del libro. Utiliza cls porque hace referencia a la clase en sí, lo que permite crear una nueva instancia de la clase con los atributos proporcionados, marcándola como no disponible. cls es igual que Libro(), pero es más flexible porque si se hereda de la clase Libro, el método de clase seguirá funcionando correctamente al crear instancias de la subclase.
+    @classmethod 
+    # @classmethod es un decorador que se utiliza para definir un método de clase dentro de una clase. Un método de clase es un método que pertenece a la clase en sí, en lugar de a una instancia específica de la clase. Esto significa que el método puede ser llamado sin necesidad de crear una instancia de la clase. En el caso de crear_no_disponible, al ser un método de clase, se puede llamar directamente desde la clase Libro sin necesidad de instanciarla, lo que es útil para crear libros que no estén disponibles sin depender del estado de una instancia específica del libro. 
+    # Utiliza cls porque hace referencia a la clase en sí, lo que permite crear una nueva instancia de la clase con los atributos proporcionados, marcándola como no disponible. cls es igual que Libro(), pero es más flexible porque si se hereda de la clase Libro, el método de clase seguirá funcionando correctamente al crear instancias de la subclase.
     def crear_no_disponible(cls, titulo, autor, isbn):
         return cls(titulo, autor, isbn, disponible=False)
 

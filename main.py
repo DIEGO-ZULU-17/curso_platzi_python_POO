@@ -22,13 +22,17 @@ from data import data_estudiantes, data_libros
 from exceptions import LibroNoDisponibleError, UsuarioNoEncontradoError
 from usuarios import Profesor
 from libros import Libro
-from usuarios import Estudiante
+from persistencia import Persistencia
+""" from usuarios import Estudiante """
+
 
 biblioteca = Biblioteca("Biblioteca Perfecta")
 profesor = Profesor("Felipe", "123123123")
 
 biblioteca.usuarios = [profesor] + data_estudiantes
 biblioteca.libros = data_libros
+persistencia = Persistencia() # Se crea una instancia de la clase Persistencia, lo que permite acceder a los métodos de esta clase para guardar y cargar datos relacionados con la biblioteca. Al crear esta instancia, se puede utilizar el método guardar_datos para almacenar la información de la biblioteca en un archivo JSON, y también se podrían implementar métodos adicionales para cargar los datos desde el archivo JSON cuando sea necesario.
+persistencia.guardar_datos(biblioteca) # Se llama al método guardar_datos de la instancia persistencia, pasando el objeto biblioteca como argumento. Esto significa que se está guardando la información de la biblioteca (como su nombre, libros y usuarios) en un archivo JSON utilizando el método definido en la clase Persistencia. Al ejecutar esta línea, se crea o actualiza el archivo JSON con los datos actuales de la biblioteca, lo que permite mantener un registro persistente de la información de la biblioteca incluso después de cerrar el programa.
 
 
 """ # EJEMPLO DE SETTER CON VALIDACIÓN
@@ -40,10 +44,14 @@ libro_no_disp = Libro.crear_no_disponible(
     autor="Autor de prueba",
     isbn="1234567890",
 )
+
+"""
 print("Libro disponible:", libro_no_disp.disponible)  # False
 # Esto funciona porque crear_no_disponible es un método de clase, lo que significa que se puede llamar directamente desde la clase Libro sin necesidad de crear una instancia de la clase. En este caso, se está llamando al método crear_no_disponible pasando el título, autor e ISBN del libro como argumentos para crear una nueva instancia de Libro que no esté disponible. El resultado de esta operación se almacena en la variable libro_no_disp. Luego, se imprime el estado de disponibilidad del libro utilizando el atributo disponible, que en este caso será False, indicando que el libro no está disponible para préstamo.
+"""
 
 
+"""
 # EJEMPLO DE USO DE MÉTODOS DE CLASE Y ESTÁTICOS EN LA CLASE Estudiante
 # Usando el método de clase crear_estudiante
 estudiante1 = Estudiante.crear_estudiante("Juan Pérez", "12345678", "Ingeniería")
@@ -62,10 +70,10 @@ try:
     estudiante3 = Estudiante.crear_estudiante("Pedro", "11111111", "Filosofía")
 except ValueError as e:
     print(f"Error: {e}")
+"""
 
 
-
-print("\n Bienvenido a Platzi Biblioteca")
+print("\n Bienvenido a Platzi Biblioteca \n")
 
 print("Libros disponibles:")
 for libro in biblioteca.libros_disponibles:
