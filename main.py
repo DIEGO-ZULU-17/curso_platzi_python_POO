@@ -26,14 +26,21 @@ from persistencia import Persistencia
 """ from usuarios import Estudiante """
 
 
+""" 
+# Ejemplos de datos para poblar la biblioteca:
+
 biblioteca = Biblioteca("Biblioteca Perfecta")
 profesor = Profesor("Felipe", "123123123")
 
 biblioteca.usuarios = [profesor] + data_estudiantes
-biblioteca.libros = data_libros
-persistencia = Persistencia() # Se crea una instancia de la clase Persistencia, lo que permite acceder a los métodos de esta clase para guardar y cargar datos relacionados con la biblioteca. Al crear esta instancia, se puede utilizar el método guardar_datos para almacenar la información de la biblioteca en un archivo JSON, y también se podrían implementar métodos adicionales para cargar los datos desde el archivo JSON cuando sea necesario.
-persistencia.guardar_datos(biblioteca) # Se llama al método guardar_datos de la instancia persistencia, pasando el objeto biblioteca como argumento. Esto significa que se está guardando la información de la biblioteca (como su nombre, libros y usuarios) en un archivo JSON utilizando el método definido en la clase Persistencia. Al ejecutar esta línea, se crea o actualiza el archivo JSON con los datos actuales de la biblioteca, lo que permite mantener un registro persistente de la información de la biblioteca incluso después de cerrar el programa.
+biblioteca.libros = data_libros """
 
+persistencia = Persistencia() # Se crea una instancia de la clase Persistencia, lo que permite acceder a los métodos de esta clase para guardar y cargar datos relacionados con la biblioteca. Al crear esta instancia, se puede utilizar el método guardar_datos para almacenar la información de la biblioteca en un archivo JSON, y también se podrían implementar métodos adicionales para cargar los datos desde el archivo JSON cuando sea necesario.
+
+biblioteca = persistencia.cargar_datos() # Se llama al método cargar_datos de la instancia persistencia, sin argumentos. Esto significa que se está cargando la información de la biblioteca desde el archivo JSON utilizando el método definido en la clase Persistencia. Al ejecutar esta línea, se lee el archivo JSON y se reconstruyen las instancias de libros y usuarios, actualizando los datos de la biblioteca con los valores almacenados en el archivo. Esto permite recuperar la información de la biblioteca que se guardó previamente, lo que es útil para mantener la continuidad de los datos entre sesiones del programa.
+
+
+# Al final se ubica "persistencia.guardar_datos(biblioteca)" para guardar los datos de la biblioteca en el archivo JSON después de realizar las operaciones anteriores, lo que permite mantener actualizada la información de la biblioteca para futuras sesiones del programa. 
 
 """ # EJEMPLO DE SETTER CON VALIDACIÓN
 libro_de_prueba = data_libros[0]
@@ -117,3 +124,5 @@ print("El ISBN es válido:", resultado)  # False
 resultado = Biblioteca.validar_isbn("1234567890")
 print("El ISBN es válido:", resultado)  # True """
 
+# Al final se ubica "persistencia.guardar_datos(biblioteca)" para guardar los datos de la biblioteca en el archivo JSON después de realizar las operaciones anteriores, lo que permite mantener actualizada la información de la biblioteca para futuras sesiones del programa. Esto es importante para asegurar que cualquier cambio realizado en la biblioteca durante la ejecución del programa se guarde correctamente y esté disponible la próxima vez que se ejecute el programa, manteniendo así la continuidad de los datos entre sesiones.
+persistencia.guardar_datos(biblioteca)

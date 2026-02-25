@@ -38,7 +38,9 @@
     {
       "_nombre": "Laura Sofía Martínez",
       "_cedula": "1001234571",
-      "libros_prestados": [],
+      "libros_prestados": [
+        "La Metamorfosis"
+      ],
       "carrera": "Psicología",
       "limite_libros": 3
     },
@@ -85,7 +87,7 @@
       "paginas": null,
       "es_nuevo": false,
       "isbn": "9780307474728",
-      "disponible": true,
+      "disponible": false,
       "_Libro__veces_prestado": 0
     },
     {
@@ -166,9 +168,9 @@
       "paginas": null,
       "es_nuevo": false,
       "isbn": "9788420674025",
-      "disponible": true,
-      "_Libro__veces_prestado": 0
+      "disponible": false,
+      "_Libro__veces_prestado": 1
     }
   ],
-  "fecha_guardado": "2026-02-22T21:56:33.422341"
+  "fecha_guardado": "2026-02-24T21:55:26.669234"
 }
