@@ -5,79 +5,80 @@
             "nombre": "Felipe",
             "cedula": "123123123",
             "libros_prestados": [],
-            "limite_libros": null
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Ana María López",
             "cedula": "1001234567",
             "libros_prestados": [
-                "Cien Años de Soledad"
+                "Matar un Ruiseñor"
             ],
-            "carrera": "Ingeniería de Sistemas",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Carlos Andrés Ruiz",
             "cedula": "1001234568",
             "libros_prestados": [],
-            "carrera": "Medicina",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "María Fernanda Torres",
             "cedula": "1001234569",
             "libros_prestados": [],
-            "carrera": "Derecho",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Juan Pablo Gómez",
             "cedula": "1001234570",
             "libros_prestados": [],
-            "carrera": "Arquitectura",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Laura Sofía Martínez",
             "cedula": "1001234571",
             "libros_prestados": [],
-            "carrera": "Psicología",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Alejandro Castro",
             "cedula": "1001234572",
             "libros_prestados": [],
-            "carrera": "Administración de Empresas",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Valentina Pérez",
             "cedula": "1001234573",
             "libros_prestados": [],
-            "carrera": "Diseño Gráfico",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Santiago Ramírez",
             "cedula": "1001234574",
             "libros_prestados": [],
-            "carrera": "Ingeniería Civil",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Camila Andrea Vargas",
             "cedula": "1001234575",
             "libros_prestados": [],
-            "carrera": "Comunicación Social",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         },
         {
             "nombre": "Sebastián Morales",
             "cedula": "1001234576",
             "libros_prestados": [],
-            "carrera": "Contaduría Pública",
-            "limite_libros": 3
+            "limite_libros": null,
+            "tipo": "Profesor"
         }
     ],
     "libros": [
@@ -86,7 +87,7 @@
             "autor": "Gabriel García Márquez",
             "isbn": "9780307474728",
             "disponible": false,
-            "_Libro__veces_prestado": 1
+            "_Libro__veces_prestado": 0
         },
         {
             "titulo": "El Principito",
@@ -134,8 +135,8 @@
             "titulo": "Matar un Ruiseñor",
             "autor": "Harper Lee",
             "isbn": "9780061120084",
-            "disponible": true,
-            "_Libro__veces_prestado": 0
+            "disponible": false,
+            "_Libro__veces_prestado": 1
         },
         {
             "titulo": "El Señor de los Anillos",
@@ -152,5 +153,5 @@
             "_Libro__veces_prestado": 0
         }
     ],
-    "fecha_guardado": "2026-02-24T22:45:13.340193"
+    "fecha_guardado": "2026-02-24T23:12:51.250030"
 }

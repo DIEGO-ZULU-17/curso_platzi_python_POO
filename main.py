@@ -17,22 +17,22 @@ except (PersistenciaError, DatosInvalidosError) as e:
     biblioteca = Biblioteca("Biblioteca Vacía")
 
 
-print("Bienvenido a Platzi Biblioteca")
+print("\n Bienvenido a Platzi Biblioteca \n")
 
-print("Libros disponibles:")
+print("Libros disponibles:\n")
 for libro in biblioteca.libros_disponibles():
     print(libro.descripcion_completa)
 print()
 
-cedula = input("Digite el numero cedula: ")
+cedula = input("\nDigite el numero cedula: \n")
 try:
     usuario = biblioteca.buscar_usuario(cedula)
-    print(usuario.cedula, usuario.nombre)
+    print(f"\nUsuario encontrado: {usuario.cedula}, {usuario.nombre}")
 except UsuarioNoEncontradoError as e:
     print(e)
     sys.exit(1)
 
-titulo = input("Digite el titulo del libro: ")
+titulo = input("\nDigite el titulo del libro: \n")
 try:
     libro = biblioteca.buscar_libro(titulo)
     print(f"El libro que selecionaste es: {libro}")
