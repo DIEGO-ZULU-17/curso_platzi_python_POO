@@ -1,5 +1,3 @@
-"""En este archivo se definen las excepciones personalizadas para la biblioteca."""
-
 class BibliotecaError(Exception):
     """Excepción base para errores de la biblioteca"""
 

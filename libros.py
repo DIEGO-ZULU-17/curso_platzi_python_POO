@@ -1,5 +1,4 @@
-from typing import Protocol, Optional
-from abc import ABC, abstractmethod
+from typing import Protocol
 
 from exceptions import LibroNoDisponibleError
 
@@ -18,75 +17,58 @@ class LibroProtocol(Protocol):
         ...
 
 
-class LibroBase(ABC):
-    def __init__(self, titulo: str, autor: str, paginas: Optional[int] = None, es_nuevo: bool = False):
+class Libro:
+    def __init__(self, titulo, autor, isbn, disponible=True):
         self.titulo = titulo
         self.autor = autor
-        self.paginas = paginas
-        self.es_nuevo = es_nuevo
-
-    @abstractmethod
-    def calcular_duracion(self) -> str:
-        raise NotImplementedError
-
-
-class Libro(LibroBase):
-    def __init__(self, titulo: str, autor: str, isbn: str, disponible: bool = True,
-                 paginas: Optional[int] = None, es_nuevo: bool = False):
-        super().__init__(titulo, autor, paginas, es_nuevo)
         self.isbn = isbn
         self.disponible = disponible
         self.__veces_prestado = 0
 
+    @classmethod
+    def crear_no_disponible(cls, titulo, autor, isbn):
+        return cls(titulo, autor, isbn, disponible=False)
+
     def __str__(self):
         return f"{self.titulo} por {self.autor} disponible: {self.disponible}"
 
-    def prestar(self) -> str:
+    def prestar(self):
         if not self.disponible:
             raise LibroNoDisponibleError(f"'{self.titulo}' no está disponible")
 
-        self.disponible = False
-        self.__veces_prestado += 1
-        return f"'{self.titulo}' prestado exitosamente. Total préstamos: {self.__veces_prestado}"
+        if self.disponible:
+            self.disponible = False
+            self.__veces_prestado += 1
+            return f"'{self.titulo}' prestado exitosamente. Total préstamos: {self.__veces_prestado}"
 
-    def devolver(self) -> str:
+    def devolver(self):
         self.disponible = True
         return f"'{self.titulo}' devuelto y disponible nuevamente"
 
     @property
-    def es_popular(self) -> bool:
+    def es_popular(self):
         return self.__veces_prestado > 5
 
-    @property # @property se utiliza para definir un método como una propiedad, lo que permite acceder a su valor como si fuera un atributo, sin necesidad de llamarlo como una función. Esto es útil para proporcionar una interfaz más limpia y fácil de usar, especialmente cuando el valor se calcula dinámicamente o se basa en otros atributos.
-    def veces_prestado(self) -> int:
+    @property
+    def veces_prestado(self):
         return self.__veces_prestado
 
-    @veces_prestado.setter # @veces_prestado.setter se utiliza para definir un método como un setter para una propiedad previamente definida con @property. Esto permite asignar un valor a la propiedad, lo que a su vez llama al método setter para realizar cualquier lógica adicional necesaria al establecer el valor.
+    @veces_prestado.setter
     def veces_prestado(self, veces_prestado):
         if veces_prestado > 0:
             self.__veces_prestado = veces_prestado
-        else:
-            raise ValueError("El número de veces prestado debe ser mayor que cero")
+        raise ValueError("El valor de veces_prestado debe ser mayor a cero")
 
     @property
-    def descripcion_completa(self) -> str:
-        return f"{self.titulo} por {self.autor}, ISBN: {self.isbn}"
-
-    def calcular_duracion(self) -> str:
-        return "7 días"
-
-    @classmethod 
-    # @classmethod es un decorador que se utiliza para definir un método de clase dentro de una clase. Un método de clase es un método que pertenece a la clase en sí, en lugar de a una instancia específica de la clase. Esto significa que el método puede ser llamado sin necesidad de crear una instancia de la clase. En el caso de crear_no_disponible, al ser un método de clase, se puede llamar directamente desde la clase Libro sin necesidad de instanciarla, lo que es útil para crear libros que no estén disponibles sin depender del estado de una instancia específica del libro. 
-    # Utiliza cls porque hace referencia a la clase en sí, lo que permite crear una nueva instancia de la clase con los atributos proporcionados, marcándola como no disponible. cls es igual que Libro(), pero es más flexible porque si se hereda de la clase Libro, el método de clase seguirá funcionando correctamente al crear instancias de la subclase.
-    def crear_no_disponible(cls, titulo, autor, isbn):
-        return cls(titulo, autor, isbn, disponible=False)
+    def descripcion_completa(self):
+        return f"{self.titulo} por {self.autor} (ISBN: {self.isbn})"
 
 
 class LibroFisico(Libro):
-    def calcular_duracion(self) -> str:
+    def calcular_duracion(self):
         return "7 días"
 
 
 class LibroDigital(Libro):
-    def calcular_duracion(self) -> str:
+    def calcular_duracion(self):
         return "14 días"

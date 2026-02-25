@@ -1,9 +1,3 @@
-"""
-Módulo para generar datos de ejemplo de libros de la biblioteca.
-Este módulo contiene una colección de libros preconfigurados para
-facilitar las pruebas y demostraciones del sistema.
-"""
-
 from libros import LibroFisico
 from usuarios import Estudiante
 
