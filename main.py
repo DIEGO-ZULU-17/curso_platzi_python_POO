@@ -1,8 +1,20 @@
-from exceptions import LibroNoDisponibleError, UsuarioNoEncontradoError
+from exceptions import (
+    LibroNoDisponibleError,
+    UsuarioNoEncontradoError,
+    PersistenciaError,
+    DatosInvalidosError,
+)
 from persistencia import Persistencia
+from biblioteca import Biblioteca
+import sys
 
 persistencia = Persistencia()
-biblioteca = persistencia.cargar_datos()
+try:
+    biblioteca = persistencia.cargar_datos()
+except (PersistenciaError, DatosInvalidosError) as e:
+    print(f"Error al cargar datos: {e}")
+    print("Se iniciará una biblioteca vacía.")
+    biblioteca = Biblioteca("Biblioteca Vacía")
 
 
 print("Bienvenido a Platzi Biblioteca")
@@ -18,6 +30,7 @@ try:
     print(usuario.cedula, usuario.nombre)
 except UsuarioNoEncontradoError as e:
     print(e)
+    sys.exit(1)
 
 titulo = input("Digite el titulo del libro: ")
 try:
@@ -25,6 +38,7 @@ try:
     print(f"El libro que selecionaste es: {libro}")
 except LibroNoDisponibleError as e:
     print(e)
+    sys.exit(1)
 
 resultado = usuario.solicitar_libro(libro.titulo)
 print(f"\n{resultado}")
@@ -35,4 +49,7 @@ try:
 except LibroNoDisponibleError as e:
     print(e)
 
-persistencia.guardar_datos(biblioteca)
+try:
+    persistencia.guardar_datos(biblioteca)
+except PersistenciaError as e:
+    print(f"No se pudo guardar la información: {e}")

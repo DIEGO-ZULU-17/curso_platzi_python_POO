@@ -4,6 +4,12 @@ from datetime import datetime
 from biblioteca import Biblioteca
 from libros import LibroFisico
 from usuarios import Estudiante, Profesor
+from exceptions import (
+    PersistenciaError,
+    ArchivoNoEncontradoError,
+    DatosInvalidosError,
+)
+from config import ENCODING
 
 
 class Persistencia:
@@ -13,41 +19,69 @@ class Persistencia:
     def guardar_datos(self, biblioteca):
         datos = {
             "nombre": biblioteca.nombre,
-            "usuarios": [usuario.__dict__ for usuario in biblioteca.usuarios],
+            "usuarios": [],
             "libros": [libro.__dict__ for libro in biblioteca.libros],
             "fecha_guardado": datetime.now().isoformat(),
         }
-        with open(self.archivo, "w", encoding="utf-8") as f:
-            json.dump(datos, f, indent=4, ensure_ascii=False)
+        # Serializar usuarios incluyendo el tipo de usuario para restauración
+        for usuario in biblioteca.usuarios:
+            udata = usuario.__dict__.copy()
+            udata["tipo"] = usuario.__class__.__name__
+            datos["usuarios"].append(udata)
+
+        try:
+            with open(self.archivo, "w", encoding=ENCODING) as f:
+                json.dump(datos, f, indent=4, ensure_ascii=False)
+        except Exception as e:
+            raise PersistenciaError(f"Error guardando datos en {self.archivo}: {e}")
 
     def cargar_datos(self):
-        with open(self.archivo, "r", encoding="utf-8") as f:
-            datos = json.load(f)
+        try:
+            with open(self.archivo, "r", encoding=ENCODING) as f:
+                datos = json.load(f)
+        except FileNotFoundError:
+            # Archivo ausente: devolver una biblioteca vacía sin imprimir mensajes de depuración
+            return Biblioteca("Biblioteca Vacía")
+        except json.JSONDecodeError as e:
+            raise DatosInvalidosError(f"El archivo {self.archivo} contiene JSON inválido: {e}")
+        except Exception as e:
+            raise PersistenciaError(f"Error leyendo {self.archivo}: {e}")
 
-        # datos: {'titulo': 'Cien Años de Soledad', 'autor': 'Gabriel García Márquez', 'isbn': '9780307474728', 'disponible': True, '_Libro__veces_prestado': 0}
+        # validar estructura mínima
+        if not isinstance(datos, dict) or "nombre" not in datos:
+            raise DatosInvalidosError("Estructura de datos inválida en el archivo de persistencia")
 
-        biblioteca = Biblioteca(datos["nombre"])
-        for dato_libro in datos["libros"]:
-            libro = LibroFisico(
-                titulo=dato_libro["titulo"],
-                autor=dato_libro["autor"],
-                isbn=dato_libro["isbn"],
-                disponible=dato_libro["disponible"],
-            )
-            biblioteca.libros.append(libro)
+        biblioteca = Biblioteca(datos.get("nombre", "Biblioteca"))
 
-        # datos: {'nombre': 'Felipe', 'cedula': '123123123', 'libros_prestados': [], 'limite_libros': None}
-        # datos: {'nombre': 'Ana María López', 'cedula': '1001234567', 'libros_prestados': [], 'carrera': 'Ingeniería de Sistemas', 'limite_libros': 3}
-        for dato_usuario in datos["usuarios"]:
-            if "carrera" in dato_usuario:
-                usuario = Estudiante(
-                    nombre=dato_usuario["nombre"],
-                    cedula=dato_usuario["cedula"],
-                    carrera=dato_usuario["carrera"],
+        for dato_libro in datos.get("libros", []):
+            try:
+                libro = LibroFisico(
+                    titulo=dato_libro.get("titulo", ""),
+                    autor=dato_libro.get("autor", ""),
+                    isbn=dato_libro.get("isbn", ""),
+                    disponible=dato_libro.get("disponible", True),
                 )
-            else:
-                usuario = Profesor(
-                    nombre=dato_usuario["nombre"], cedula=dato_usuario["cedula"]
-                )
-            biblioteca.usuarios.append(usuario)
+                biblioteca.libros.append(libro)
+            except Exception:
+                # Omitir entradas inválidas silenciosamente
+                continue
+
+        for dato_usuario in datos.get("usuarios", []):
+            try:
+                tipo = dato_usuario.get("tipo", "Profesor")
+                if tipo == "Estudiante":
+                    usuario = Estudiante(
+                        nombre=dato_usuario.get("nombre", ""),
+                        cedula=dato_usuario.get("cedula", ""),
+                        carrera=dato_usuario.get("carrera", ""),
+                    )
+                else:
+                    usuario = Profesor(
+                        nombre=dato_usuario.get("nombre", ""), cedula=dato_usuario.get("cedula", "")
+                    )
+                biblioteca.usuarios.append(usuario)
+            except Exception:
+                # Omitir usuarios inválidos silenciosamente
+                continue
+
         return biblioteca

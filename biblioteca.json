@@ -10,7 +10,9 @@
         {
             "nombre": "Ana María López",
             "cedula": "1001234567",
-            "libros_prestados": [],
+            "libros_prestados": [
+                "Cien Años de Soledad"
+            ],
             "carrera": "Ingeniería de Sistemas",
             "limite_libros": 3
         },
@@ -83,8 +85,8 @@
             "titulo": "Cien Años de Soledad",
             "autor": "Gabriel García Márquez",
             "isbn": "9780307474728",
-            "disponible": true,
-            "_Libro__veces_prestado": 0
+            "disponible": false,
+            "_Libro__veces_prestado": 1
         },
         {
             "titulo": "El Principito",
@@ -150,5 +152,5 @@
             "_Libro__veces_prestado": 0
         }
     ],
-    "fecha_guardado": "2025-09-29T21:56:11.427649"
+    "fecha_guardado": "2026-02-24T22:45:13.340193"
 }
